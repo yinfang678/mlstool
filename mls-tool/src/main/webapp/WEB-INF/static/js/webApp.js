@@ -3,10 +3,10 @@ function initWebApp(app){
         function ($scope, $http, $uibModal, $log) {
         $scope.selectedItem = [];
         $scope.leftSeltected = [];
-		$scope.resources = getResources(mls_meta);
+        $scope.resources = getResources(mls_meta);
         $scope.classes;
         $scope.samples;
-		$scope.dateSource;
+        $scope.dateSource;
         $scope.parseMLS = [];
 
 // 全局监视器;
@@ -88,6 +88,8 @@ function initWebApp(app){
         };
 // 撤销
         $scope.repeal = function () {
+          var leftScope = angular.element(leftGridDiv).scope();
+          $scope.leftSeltected = leftScope.gridApi.selection.getSelectedRows();
             if ($scope.leftSeltected.length < 1) {
                 alert("请选择listing_info_full字段");
                 return false;

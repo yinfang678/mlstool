@@ -57,7 +57,8 @@ function init(app) {
                 .$watch(
                     'selectedClass',
                     function(newValue, oldValue) {
-                      $scope.dateSource = lcolJSON[$scope.selectedResource][newValue]["data"];
+                      var scope = angular.element(mainDiv).scope();
+                      scope.dateSource = lcolJSON[$scope.selectedResource][newValue]["data"];
                     });
             $scope.myDefs = [
                 {
