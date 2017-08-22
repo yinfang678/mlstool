@@ -211,7 +211,7 @@ function initWebApp(app){
             });
         }
     }]);
-    //$uibModalInstance是模态窗口的实例
+    // $uibModalInstance是模态窗口的实例
     app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items1) {
         $scope.item = items1;
         $scope.ok = function () {
