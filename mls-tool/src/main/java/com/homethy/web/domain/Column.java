@@ -7,6 +7,7 @@ public class Column {
   private String dataType = "";
   private String mlsCols = "";
   private String js = "";
+  private String sample = "";
 
   public String getColumnName() {
     return columnName;
@@ -52,7 +53,7 @@ public class Column {
   public String toString() {
     return "{\"columnName\":\"" + this.columnName + "\",\"columnComment\":\"" + this.columnComment
         + "\",\"dataType\":\"" + this.dataType + "\",\"mlsCols\":\"" + this.mlsCols + "\",\"js\":\""
-        + this.js + "\"}";
+        + this.js + "\",\"sample\":\"" + this.sample + "\"}";
   }
 
 }

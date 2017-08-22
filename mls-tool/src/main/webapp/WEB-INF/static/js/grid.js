@@ -87,6 +87,11 @@ function init(app) {
                   displayName : '匹配字段',
                   cellTemplate : '<a title="{{row.entity.mlsCols}}">{{row.entity.mlsCols}}</a>'
                 }, {
+                  field : 'sample',
+                  width : '120',
+                  displayName : '解析结果',
+                  enableCellEdit : false
+                }, {
                   field : 'js',
                   enableCellEdit : true,
                   width : '320',

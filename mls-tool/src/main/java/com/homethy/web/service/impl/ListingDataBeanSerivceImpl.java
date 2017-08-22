@@ -54,19 +54,13 @@ public class ListingDataBeanSerivceImpl implements IListingDataBeanSerivce {
     if (rmd == null) {
       return "";
     }
-    // if (StringUtils.isNoneEmpty(rmd.getGridData())) {
-    // return rmd.getGridData();
-    // }
+
     String result = "";
     databean = getListingDataBean();
 
     String meta = rmd.getMetaData();
     String parse = rmd.getParserData();
-    // if (StringUtils.isNotEmpty(parse)) {
-    // // parse = parse.replaceAll("\\\\", "\\\\\\\\");
-    // parse = parse.replaceAll("\\\\\\\"", "\\\\\\\\\\\\\\\"");
-    // }
-    // System.out.println(parse);
+
     if (StringUtils.isEmpty(databean) || StringUtils.isEmpty(meta)) {
       return result;
     }
