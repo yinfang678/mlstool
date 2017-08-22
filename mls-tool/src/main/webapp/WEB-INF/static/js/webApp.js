@@ -1,5 +1,6 @@
 function initWebApp(app){
-	app.controller('webController', ['$scope','$http', function ($scope, $http) {
+	app.controller('webController', ['$scope','$http', '$uibModal', '$log',
+        function ($scope, $http, $uibModal, $log) {
         $scope.selectedItem = [];
         $scope.leftSeltected = [];
 		$scope.resources = getResources(mls_meta);
@@ -22,6 +23,35 @@ function initWebApp(app){
         $scope.$watch('selectedSample', function(newValue, oldValue) {
         	setSampleData(newValue);
         });
+
+        $scope.update = function (size) {
+            if ($scope.leftSeltected.length < 1) {
+                alert("请选择listing_info_full字段");
+                return false;
+            }
+            var modalInstance = $uibModal.open({
+                templateUrl: 'myModalContent.html',
+                controller: 'ModalInstanceCtrl',
+                backdrop: "static",
+                size: size,
+                resolve: {
+                    items1: function () {
+                        return $scope.leftSeltected[0].js;
+                    }
+                }
+
+            });
+
+            modalInstance.result.then(function (item) {
+                $scope.leftSeltected[0].js = item;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+            $scope.toggleAnimation = function () {
+                $scope.animationsEnabled = !$scope.animationsEnabled;
+            };
+        };
 
 // 增
         $scope.addElem = function () {
@@ -156,7 +186,7 @@ function initWebApp(app){
                     alert('创建失败！'+ errorThrown);
                 }
             });
-        }
+        };
         
         $scope.download = function () {
             var resource = $scope.selectedResource;
@@ -176,4 +206,15 @@ function initWebApp(app){
             });
         }
     }]);
+    //$uibModalInstance是模态窗口的实例
+    app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items1) {
+        $scope.item = items1;
+        $scope.ok = function () {
+            $uibModalInstance.close($scope.item);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    });
 }
