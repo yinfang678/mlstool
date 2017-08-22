@@ -64,7 +64,6 @@ a:hover {
 	color: black;
 	text-decoration: none;
 }
-
 </style>
 </head>
 <body ng-app="myApp">
@@ -102,11 +101,11 @@ a:hover {
 		</div>
 		<%-- 字段比对列表 --%>
 		<div class="row">
-			<div class="col-md-6" ng-controller="customersCtrl">
+			<div id="leftGridDiv" class="col-md-6" ng-controller="customersCtrl">
 				<div class="panel panel-default">
 					<div class="panel-heading title">listing_info_full表字段</div>
-					<div class="panel-body " ng-grid="gridOptions"
-						style="height: 480px;"></div>
+					<div class="panel-body " ui-grid="gridOptions" ui-grid-selection
+						ui-grid-edit ui-grid-resize-columns style="height: 480px;"></div>
 				</div>
 			</div>
 			<div class="col-md-1" style="text-align: center; margin-top: 100px">

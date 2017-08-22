@@ -16,8 +16,7 @@ public interface RetsMDAO {
   @Select("" + "SELECT * FROM rets_md WHERE parser_data is null;")
   List<RetsM> getRetsMAndParserDataNotNull();
 
-  @Select(""
-      + "SELECT mls_org_id,create_time,update_time,meta_data FROM rets_md WHERE parser_data is null;")
+  @Select("" + "SELECT mls_org_id,create_time,update_time,meta_data FROM rets_md;")
   List<RetsM> getRetsMList();
 
   @Select("SELECT * FROM rets_md WHERE mls_org_id = #{mlsId}")

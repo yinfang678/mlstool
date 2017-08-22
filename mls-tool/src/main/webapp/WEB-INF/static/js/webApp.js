@@ -25,6 +25,8 @@ function initWebApp(app){
         });
 
         $scope.update = function (size) {
+            var leftScope = angular.element(leftGridDiv).scope();
+            $scope.leftSeltected = leftScope.gridApi.selection.getSelectedRows();
             if ($scope.leftSeltected.length < 1) {
                 alert("请选择listing_info_full字段");
                 return false;
@@ -55,6 +57,8 @@ function initWebApp(app){
 
 // 增
         $scope.addElem = function () {
+        	var leftScope = angular.element(leftGridDiv).scope();
+        	$scope.leftSeltected = leftScope.gridApi.selection.getSelectedRows();
             if ($scope.leftSeltected.length < 1) {
                 alert("请选择listing_info_full字段");
                 return false;
@@ -73,6 +77,7 @@ function initWebApp(app){
                 		angular.forEach(lcolJSON[$scope.selectedResource][c]["data"], function(value, key) {
                 			if(value.columnName==selColName){
                 				value.mlsCols=mlsData.substring(0, mlsData.length-1);
+                				value.js=$scope.leftSeltected[0].js;
                 			}
                         });
                 	}

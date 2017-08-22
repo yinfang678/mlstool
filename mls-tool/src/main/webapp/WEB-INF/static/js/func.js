@@ -64,6 +64,8 @@ function setSampleData(num) {
 
 function onClazzChanged() {
 	var scope = angular.element(mainDiv).scope();
+	var leftScope = angular.element(leftGridDiv).scope();
+	leftScope.gridApi.selection.clearSelectedRows();
 	$.ajax({
 		type : 'POST',
 		contentType : "application/json",
