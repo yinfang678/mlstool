@@ -8,8 +8,6 @@
 	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="https://cdn.bootcss.com/ng-grid/2.0.11/ng-grid.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 <link rel="stylesheet" type="text/css" href="static/css/ui-grid.css" />
 <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 <script
@@ -18,8 +16,7 @@
 <script src="https://cdn.bootcss.com/ng-grid/2.0.11/ng-grid.debug.js"></script>
 <script
 	src="https://cdn.bootcss.com/ng-grid/2.0.11/ng-grid-flexible-height.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="static/js/ui-grid.js"></script>
 <script type="text/javascript" src="static/js/func.js"></script>
 <script type="text/javascript" src="static/js/webApp.js"></script>
@@ -111,9 +108,12 @@ a:hover {
 						ui-grid-edit ui-grid-resize-columns style="height: 480px;"></div>
 				</div>
 			</div>
-			<div class="col-md-1" style="text-align: center; margin-top: 200px">
+			<div class="col-md-1" style="text-align: center; margin-top: 100px">
 				<div class="btn-group btn-group-vertical" role="group"
 					aria-label="...">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default" ng-click="update()">编辑信息</button>
+                    </div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary" ng-click="addElem()">添加信息</button>
 					</div>
@@ -155,10 +155,28 @@ a:hover {
 			</div>
 		</div>
 
-	</div>
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title title">JS 编辑页面</h3>
+            </div>
+            <div class="modal-body">
 
+                <div class="panel panel-default">
+                    <div class="panel-heading title">JS 输入框</div>
+                    <div class="panel-body ">
+                        <textarea ng-model="item" rows="15" cols="68">{{ item }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
+
+	</div>
 	<script>
-		var app = angular.module('myApp', [ 'ngGrid', 'ui.grid',
+		var app = angular.module('myApp', [ 'ngGrid', 'ui.bootstrap', 'ui.grid',
 				'ui.grid.selection', 'ui.grid.edit', 'ui.grid.resizeColumns',
 				'ui.grid.autoResize' ]);
 		app.value("selectedItems", []);

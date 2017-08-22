@@ -100,7 +100,7 @@ public class MainController {
     String result = "";
     BufferedReader in = null;
     try {
-      String url = "http://10.4.36.107:22030/config/mls-info/resource";
+      String url = "http://predatastore.chime.me/config/mls-info/resource";
       String urlNameString =
           url + "?mlsId=" + mlsId + "&resourceName=" + resource + "&className=" + classes;
       System.out.println(urlNameString);
