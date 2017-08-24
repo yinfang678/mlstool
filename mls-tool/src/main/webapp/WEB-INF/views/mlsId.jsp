@@ -16,7 +16,8 @@
 <script src="https://cdn.bootcss.com/ng-grid/2.0.11/ng-grid.debug.js"></script>
 <script
 	src="https://cdn.bootcss.com/ng-grid/2.0.11/ng-grid-flexible-height.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="static/js/ui-grid.js"></script>
 <script type="text/javascript" src="static/js/func.js"></script>
 <script type="text/javascript" src="static/js/webApp.js"></script>
@@ -111,38 +112,34 @@ a:hover {
 			<div class="col-md-1" style="text-align: center; margin-top: 100px">
 				<div class="btn-group btn-group-vertical" role="group"
 					aria-label="...">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default" ng-click="update()">编辑信息</button>
-                    </div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-primary" ng-click="addElem()">添加信息</button>
+						<button type="button" class="btn btn-default" ng-click="update()">编辑</button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-info" ng-click="repeal()">删除信息</button>
+						<button type="button" class="btn btn-primary" ng-click="addElem()">设置</button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"
-							ng-click="saveData()">复制CLASS</button>
+						<button type="button" class="btn btn-info" ng-click="repeal()">清除</button>
 					</div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-default"
-							ng-click="copyData()">粘贴CLASS</button>
+							ng-click="saveData()">复制</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default"
+							ng-click="copyData()">粘贴</button>
 					</div>
 
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-default"
-							ng-click="saveFile()">存储</button>
-					</div>
-					<div>
-						<button type="button" disabled class="btn btn-default"
-							ng-click="show()">显示</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-warning" ng-click="reset()">重置</button>
+							ng-click="saveFile()">保存</button>
 					</div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-default"
-							ng-click="download()">下载</button>
+							ng-click="download()">采样</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-warning" ng-click="reset()">重置</button>
 					</div>
 				</div>
 			</div>
@@ -155,7 +152,7 @@ a:hover {
 			</div>
 		</div>
 
-        <script type="text/ng-template" id="myModalContent.html">
+		<script type="text/ng-template" id="myModalContent.html">
             <div class="modal-header">
                 <h3 class="modal-title title">JS 编辑页面</h3>
             </div>
@@ -176,17 +173,17 @@ a:hover {
 
 	</div>
 	<script>
-		var app = angular.module('myApp', [ 'ngGrid', 'ui.bootstrap', 'ui.grid',
-				'ui.grid.selection', 'ui.grid.edit', 'ui.grid.resizeColumns',
-				'ui.grid.autoResize' ]);
-		app.value("selectedItems", []);
-		var lcolStr = '${listing_cols}';
-		var mls_meta = JSON.parse('${mls_meta}');
-		var lcolJSON = JSON.parse(lcolStr);
-		var mlsId = '${mlsId}';
-		var sampleData = null;
-		initWebApp(app);
-		init(app);
-	</script>
+    var app = angular.module('myApp', [ 'ngGrid', 'ui.bootstrap', 'ui.grid',
+        'ui.grid.selection', 'ui.grid.edit', 'ui.grid.resizeColumns',
+        'ui.grid.autoResize' ]);
+    app.value("selectedItems", []);
+    var lcolStr = '${listing_cols}';
+    var mls_meta = JSON.parse('${mls_meta}');
+    var lcolJSON = JSON.parse(lcolStr);
+    var mlsId = '${mlsId}';
+    var sampleData = null;
+    initWebApp(app);
+    init(app);
+  </script>
 </body>
 </html>

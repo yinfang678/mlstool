@@ -119,7 +119,8 @@ function init(app) {
                           angular.forEach(
                               lcolJSON[scope.selectedResource][c]["data"],
                               function(value, key) {
-                                if (value.columnName == rowEntity.columnName) {
+                                if (value.columnName == rowEntity.columnName
+                                    && value.js == "") {
                                   value.mlsCols = rowEntity.mlsCols;
                                   value.js = rowEntity.js;
                                 }

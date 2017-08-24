@@ -112,3 +112,8 @@ function onClazzChanged() {
     }
   });
 }
+
+function leftSelected() {
+  var leftScope = angular.element(leftGridDiv).scope();
+  return leftScope.gridApi.selection.getSelectedRows();
+}

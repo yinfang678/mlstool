@@ -42,10 +42,18 @@
 				<div class="btn-group btn-group-vertical" role="group"
 					aria-label="...">
 					<div class="btn-group" role="group">
-						<p>mlsID : <input type="text" ng-model="mlsID"></p>
+						<p>
+							mlsID : <input type="text" ng-model="mlsID">
+						</p>
 					</div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary" ng-click="addElem()">添加MLS</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default" ng-click="loadMeta()">获取META_DATA</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default" ng-click="loadSample()">下载样例数据</button>
 					</div>
 				</div>
 			</div>
@@ -54,51 +62,65 @@
 	</div>
 
 	<script>
-		var app = angular.module('myApp', [ 'ui.grid',
-			'ui.grid.selection', 'ui.grid.edit', 'ui.grid.resizeColumns',
-			'ui.grid.autoResize' ]);
-		var mls_meta = JSON.parse('${mls_meta}');
+    var app = angular.module('myApp', [ 'ui.grid', 'ui.grid.selection',
+        'ui.grid.edit', 'ui.grid.resizeColumns', 'ui.grid.autoResize' ]);
+    var mls_meta = JSON.parse('${mls_meta}');
 
-		app.controller('webController', [ '$scope', '$http',
-				function($scope, $http) {
-					$scope.dateSource = mls_meta;
-					$scope.addElem = function() {
-						$.ajax({
-							type : 'POST',
-							contentType : "application/json",
-							url : '/mls-tool/insert/new-mls?mlsId=' + $scope.mlsID,
-							dataType : 'text',
-							success : function(data) {
-								location.reload(true);
-							},
-							error : function(XMLHttpRequest, textStatus, errorThrown) {
-								location.reload(true);
-							}
-						});
-					};
-				} ]);
-		app.controller('customersCtrl', function($scope) {
-			$scope.myDefs = [ {
-				field : 'mlsOrgId',
-				displayName : 'mlsID',
-				cellTemplate : '<a href="{{row.entity.mlsOrgId}}">{{row.entity.mlsOrgId}}</a>',
-				enableSorting: true
-			}, {
-				field : 'metaData',
-				displayName : 'metaData'
-			}, {
-				field : 'createTime',
-				displayName : 'createTime'
-			}, {
-				field : 'updateTime',
-				displayName : 'updateTime'
-			} ];
-			$scope.gridOptions = {
-				i18n : 'zh-cn',
-				data : 'dateSource',// 数据
-				columnDefs : $scope.myDefs// 表头
-			}
-		});
-	</script>
+    app.controller('webController', [ '$scope', '$http',
+        function($scope, $http) {
+          $scope.dateSource = mls_meta;
+          $scope.addElem = function() {
+            $.ajax({
+              type : 'POST',
+              contentType : "application/json",
+              url : '/mls-tool/insert/new-mls?mlsId=' + $scope.mlsID,
+              dataType : 'text',
+              success : function(data) {
+                location.reload(true);
+              },
+              error : function(XMLHttpRequest, textStatus, errorThrown) {
+                location.reload(true);
+              }
+            });
+          };
+          $scope.loadMeta = function() {
+            alert("loadMeta");
+          };
+          $scope.loadSample = function() {
+            alert("loadSample");
+          };
+        } ]);
+    app
+        .controller(
+            'customersCtrl',
+            function($scope) {
+              $scope.myDefs = [
+                  {
+                    field : 'mlsOrgId',
+                    displayName : 'mlsID',
+                    cellTemplate : '<a href="{{row.entity.mlsOrgId}}">{{row.entity.mlsOrgId}}</a>',
+                    enableSorting : true
+                  }, {
+                    field : 'metaData',
+                    displayName : 'metaData'
+                  }, {
+                    field : 'createTime',
+                    displayName : 'createTime'
+                  }, {
+                    field : 'updateTime',
+                    displayName : 'updateTime'
+                  }, {
+                    field : 'operation',
+                    displayName : '',
+                    cellTemplate : '<div class="btn-group" role="group"><button type="button" class="btn btn-default" ng-click="loadMeta()">a</button></div>'
+                  } ];
+              $scope.gridOptions = {
+                i18n : 'zh-cn',
+                data : 'dateSource',// 数据
+                columnDefs : $scope.myDefs
+              // 表头
+              }
+            });
+  </script>
 </body>
 </html>
