@@ -11,6 +11,13 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.GetItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +41,16 @@ import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 
 
+
 @Controller
 public class MainController {
+
+  private Log log = LogFactory.getLog(MainController.class);
+
+  public static final String DYNAMODB_TABLE_LISTING = "listing";
+  public static final String DYNAMODB_TABLE_LISTING_HASHKEY = "chimeKey";
+
+  private DynamoDB docClient = new DynamoDB(AmazonDynamoDBClientBuilder.standard().build());
 
   @Autowired
   IListingDataBeanSerivce listingDataBeanSerivce;
@@ -103,7 +118,8 @@ public class MainController {
       String url = "http://predatastore.chime.me/config/mls-info/resource";
       String urlNameString =
           url + "?mlsId=" + mlsId + "&resourceName=" + resource + "&className=" + classes;
-      System.out.println(urlNameString);
+//      System.out.println(urlNameString);
+      log.info("Get Url:" + urlNameString);
       URL realUrl = new URL(urlNameString);
       // 打开和URL之间的连接
       URLConnection connection = realUrl.openConnection();
@@ -128,6 +144,7 @@ public class MainController {
       }
     } catch (Exception e) {
       System.out.println("发送GET请求出现异常！" + e);
+      log.error(e.getMessage(), e);
       e.printStackTrace();
     } finally {
       try {
@@ -141,9 +158,25 @@ public class MainController {
     List<ResourceBean> list =
         JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
     for (ResourceBean bean : list) {
+      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(), bean.getClassName(), bean.getResourceKey());
+      log.info("Get data from dynamodb, chimeKey =" + chimeKey);
+      bean.setData(getDynamodbData(chimeKey));
       resourceService.insertResource(bean);
     }
     return "success";
+  }
+
+  private String getDynamodbData(String chimeKey) {
+    try {
+      Table table = docClient.getTable(DYNAMODB_TABLE_LISTING);
+      GetItemOutcome outcome = table.getItemOutcome(DYNAMODB_TABLE_LISTING_HASHKEY, chimeKey);
+      Item item = outcome.getItem();
+      return item.toJSON();
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.error(e.getMessage(), e);
+    }
+    return "";
   }
 
   @RequestMapping(value = "/get/sample-data", method = RequestMethod.POST)
