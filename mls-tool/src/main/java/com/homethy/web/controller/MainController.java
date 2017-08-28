@@ -50,7 +50,7 @@ public class MainController {
   public static final String DYNAMODB_TABLE_LISTING = "listing";
   public static final String DYNAMODB_TABLE_LISTING_HASHKEY = "chimeKey";
 
-  private DynamoDB docClient = new DynamoDB(AmazonDynamoDBClientBuilder.standard().build());
+
 
   @Autowired
   IListingDataBeanSerivce listingDataBeanSerivce;
@@ -168,7 +168,7 @@ public class MainController {
 
   private String getDynamodbData(String chimeKey) {
     try {
-      Table table = docClient.getTable(DYNAMODB_TABLE_LISTING);
+      Table table = getDynamoDbInstance().getTable(DYNAMODB_TABLE_LISTING);
       GetItemOutcome outcome = table.getItemOutcome(DYNAMODB_TABLE_LISTING_HASHKEY, chimeKey);
       Item item = outcome.getItem();
       return item.toJSON();
@@ -202,5 +202,13 @@ public class MainController {
     rm.setMlsOrgId(mlsId);
     retsMService.insert(rm);
     return "done";
+  }
+
+  private static  DynamoDB docClient = null;
+  private static synchronized DynamoDB getDynamoDbInstance() {
+    if (docClient == null){
+      docClient = new DynamoDB(AmazonDynamoDBClientBuilder.standard().build());
+    }
+    return docClient;
   }
 }
