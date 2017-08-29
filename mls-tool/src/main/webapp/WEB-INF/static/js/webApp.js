@@ -109,17 +109,19 @@ function initWebApp(app) {
                     return false;
                   } else {
                     if ($scope.selectedClass != "COMMONFIELD") {
-                      $scope.leftSeltected[0].mlsCols = null;
-                      $scope.leftSeltected[0].js = null;
+                      $scope.leftSeltected[0].mlsCols = "";
+                      $scope.leftSeltected[0].js = "";
                     } else {
                       var selColName = $scope.leftSeltected[0].columnName;
+                      var selMlsCols = $scope.leftSeltected[0].mlsCols;
                       for ( var c in lcolJSON[$scope.selectedResource]) {
                         angular.forEach(
                             lcolJSON[$scope.selectedResource][c]["data"],
                             function(value, key) {
-                              if (value.columnName == selColName) {
-                                value.mlsCols = null;
-                                value.js = null;
+                              if (value.columnName == selColName
+                                  && selMlsCols == value.mlsCols) {
+                                value.mlsCols = "";
+                                value.js = "";
                               }
                             });
                       }
@@ -205,14 +207,13 @@ function initWebApp(app) {
       var scope = angular.element(mainDiv).scope();
       if (scope.selectedClass == "COMMONFIELD") {
         for ( var c in lcolJSON[scope.selectedResource]) {
-          angular
-              .forEach(lcolJSON[scope.selectedResource][c]["data"],
-                  function(value, key) {
-                    if (value.columnName == leftSelected()[0].columnName
-                        && value.js == "") {
-                      value.js = $scope.item;
-                    }
-                  });
+          angular.forEach(lcolJSON[scope.selectedResource][c]["data"],
+              function(value, key) {
+                if (value.columnName == leftSelected()[0].columnName
+                    && value.js == "") {
+                  value.js = $scope.item;
+                }
+              });
         }
       }
     };
