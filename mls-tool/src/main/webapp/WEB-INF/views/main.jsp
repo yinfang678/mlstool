@@ -31,11 +31,11 @@
 			<%--<p class="lead">副标题</p>--%>
 		</div>
 		<div class="row">
-			<div class="col-md-8" ng-controller="customersCtrl">
+			<div id="leftGridDiv" class="col-md-8" ng-controller="customersCtrl">
 				<div class="panel panel-default">
 					<div class="panel-heading title">房源列表</div>
-					<div class="panel-body " ui-grid="gridOptions"
-						style="height: 480px;"></div>
+					<div class="panel-body " ui-grid="gridOptions" ui-grid-selection
+						ui-grid-resize-columns style="height: 480px;"></div>
 				</div>
 			</div>
 			<div class="col-md-1" style="text-align: center; margin-top: 200px">
@@ -50,10 +50,15 @@
 						<button type="button" class="btn btn-primary" ng-click="addElem()">添加MLS</button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default" ng-click="loadMeta()">获取META_DATA</button>
+						<button type="button" class="btn btn-default"
+							ng-click="loadMeta()">获取META_DATA</button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default" ng-click="loadSample()">下载样例数据</button>
+						<button type="button" class="btn btn-default"
+							ng-click="loadSample()">下载样例数据</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default" ng-click="toPre()">同步到预发布</button>
 					</div>
 				</div>
 			</div>
@@ -66,7 +71,9 @@
         'ui.grid.edit', 'ui.grid.resizeColumns', 'ui.grid.autoResize' ]);
     var mls_meta = JSON.parse('${mls_meta}');
 
-    app.controller('webController', [ '$scope', '$http',
+    app.controller('webController', [
+        '$scope',
+        '$http',
         function($scope, $http) {
           $scope.dateSource = mls_meta;
           $scope.addElem = function() {
@@ -89,36 +96,66 @@
           $scope.loadSample = function() {
             alert("loadSample");
           };
+          $scope.toPre = function() {
+            var leftScope = angular.element(leftGridDiv).scope();
+            var sel = leftScope.gridApi.selection.getSelectedRows();
+            if (sel.length > 0) {
+              alert(sel[0].mlsOrgId);
+              $
+                  .ajax({
+                    type : 'POST',
+                    contentType : "application/json",
+                    url : '/mls-tool/getRets?mlsId=' + sel[0].mlsOrgId
+                        + '&index=0',
+                    dataType : 'text',
+                    success : function(data) {
+                      alert("success!");
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown) {
+                      alert("error!");
+                    }
+                  });
+            } else {
+              alert("no selected record");
+            }
+          };
         } ]);
     app
         .controller(
             'customersCtrl',
-            function($scope) {
+            function($scope, i18nService) {
+              i18nService.setCurrentLang('zh-cn');
               $scope.myDefs = [
                   {
                     field : 'mlsOrgId',
                     displayName : 'mlsID',
                     cellTemplate : '<a href="{{row.entity.mlsOrgId}}">{{row.entity.mlsOrgId}}</a>',
                     enableSorting : true
-                  }, {
+                  },
+                  {
                     field : 'metaData',
                     displayName : 'metaData'
-                  }, {
+                  },
+                  {
                     field : 'createTime',
                     displayName : 'createTime'
-                  }, {
+                  },
+                  {
                     field : 'updateTime',
                     displayName : 'updateTime'
-                  }, {
+                  },
+                  {
                     field : 'operation',
                     displayName : '',
                     cellTemplate : '<div class="btn-group" role="group"><button type="button" class="btn btn-default" ng-click="loadMeta()">a</button></div>'
                   } ];
               $scope.gridOptions = {
-                i18n : 'zh-cn',
                 data : 'dateSource',// 数据
-                columnDefs : $scope.myDefs
-              // 表头
+                columnDefs : $scope.myDefs,
+                multiSelect : false,
+                onRegisterApi : function(gridApi) {
+                  $scope.gridApi = gridApi;
+                }
               }
             });
   </script>

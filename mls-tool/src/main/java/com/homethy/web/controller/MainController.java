@@ -6,16 +6,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.GetItemOutcome;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.GetItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.homethy.web.domain.ResourceBean;
@@ -38,6 +39,7 @@ import com.homethy.web.service.ResourceService;
 import com.homethy.web.utils.JsonUtil;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 
@@ -118,7 +120,7 @@ public class MainController {
       String url = "http://predatastore.chime.me/config/mls-info/resource";
       String urlNameString =
           url + "?mlsId=" + mlsId + "&resourceName=" + resource + "&className=" + classes;
-//      System.out.println(urlNameString);
+      // System.out.println(urlNameString);
       log.info("Get Url:" + urlNameString);
       URL realUrl = new URL(urlNameString);
       // 打开和URL之间的连接
@@ -158,7 +160,8 @@ public class MainController {
     List<ResourceBean> list =
         JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
     for (ResourceBean bean : list) {
-      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(), bean.getClassName(), bean.getResourceKey());
+      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
+          bean.getClassName(), bean.getResourceKey());
       log.info("Get data from dynamodb, chimeKey =" + chimeKey);
       bean.setData(getDynamodbData(chimeKey));
       resourceService.insertResource(bean);
@@ -204,11 +207,72 @@ public class MainController {
     return "done";
   }
 
-  private static  DynamoDB docClient = null;
+  private static DynamoDB docClient = null;
+
   private static synchronized DynamoDB getDynamoDbInstance() {
-    if (docClient == null){
+    if (docClient == null) {
       docClient = new DynamoDB(AmazonDynamoDBClientBuilder.standard().build());
     }
     return docClient;
+  }
+
+  @RequestMapping("/getRets")
+  public @ResponseBody String getRets(@RequestParam int mlsId, @RequestParam int index)
+      throws IOException {
+    RetsM retsM = retsMService.get(mlsId);
+    retsM.setCreateTime(null);
+    retsM.setUpdateTime(null);
+
+    String param = JSONObject.fromObject(retsM).toString();
+    String url = "";
+    if (index == 0)
+      url = "http://predatastore.chime.me/config/mls-info/retsmd";
+    else if (index == 1)
+      url = "http://datastore.chime.me/config/mls-info/retsmd";
+    PrintWriter out = null;
+    BufferedReader in = null;
+    String result = "";
+    try {
+      URL realUrl = new URL(url);
+      // 打开和URL之间的连接
+      URLConnection conn = realUrl.openConnection();
+      // 设置通用的请求属性
+      conn.setRequestProperty("accept", "*/*");
+      conn.setRequestProperty("connection", "Keep-Alive");
+      conn.setRequestProperty("user-agent",
+          "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+      // 发送POST请求必须设置如下两行
+      conn.setDoOutput(true);
+      conn.setDoInput(true);
+      // 获取URLConnection对象对应的输出流
+      out = new PrintWriter(conn.getOutputStream());
+      // 发送请求参数
+      out.print(param);
+      // flush输出流的缓冲
+      out.flush();
+      // 定义BufferedReader输入流来读取URL的响应
+      in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String line;
+      while ((line = in.readLine()) != null) {
+        result += line;
+      }
+    } catch (Exception e) {
+      System.out.println("发送 POST 请求出现异常！" + e);
+      e.printStackTrace();
+    }
+    // 使用finally块来关闭输出流、输入流
+    finally {
+      try {
+        if (out != null) {
+          out.close();
+        }
+        if (in != null) {
+          in.close();
+        }
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+    return "success";
   }
 }

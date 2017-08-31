@@ -8,6 +8,7 @@ public class RetsM {
   private int id;
   private int mlsOrgId;
   private String metaData;
+  private String searchInfo;
   private String parserData;
   private String gridData;
   private Date createTime;
@@ -67,6 +68,14 @@ public class RetsM {
 
   public void setUpdateTime(Date updateTime) {
     this.updateTime = updateTime;
+  }
+
+  public String getSearchInfo() {
+    return searchInfo;
+  }
+
+  public void setSearchInfo(String searchInfo) {
+    this.searchInfo = searchInfo;
   }
 
   @Override

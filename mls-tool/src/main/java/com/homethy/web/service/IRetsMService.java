@@ -14,4 +14,6 @@ public interface IRetsMService {
   List<RetsM> getRetsMList();
 
   void insert(RetsM rm);
+
+  RetsM get(int mlsId);
 }

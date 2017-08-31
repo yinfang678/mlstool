@@ -154,4 +154,9 @@ public class RestMserviceImpl implements IRetsMService {
     str = str.replaceAll("&034&", "\\\\\\\\\\\\\\\"");
     return str;
   }
+
+  @Override
+  public RetsM get(int mlsId) {
+    return retsMDAO.getRetsMByMlsId(mlsId);
+  }
 }

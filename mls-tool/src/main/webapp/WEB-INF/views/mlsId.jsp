@@ -69,15 +69,15 @@ a:hover {
 </head>
 <body ng-app="myApp">
 	<div id="mainDiv" class="container-full" ng-controller="webController">
-		<div class="page-header">
+		<%--<div class="page-header">
 			<h1 class="title">房源解析开发环境</h1>
-			<%--<p class="lead">副标题</p>--%>
-		</div>
+			<p class="lead">副标题</p>
+		</div>--%>
 		<div class="row" style="margin-top: -10px;">
 			<div class="col-md-3"></div>
 			<div class="col-md-3">
 				<div class="panel-heading"
-					style="height: 55px; display: table-cell;">
+					style="height: 15px; display: table-cell;">
 					Resources: <select ng-model="selectedResource">
 						<option ng-repeat="x in resources">{{x}}</option>
 					</select>
@@ -85,7 +85,7 @@ a:hover {
 			</div>
 			<div class="col-md-3">
 				<div class="panel-heading"
-					style="height: 55px; display: table-cell;">
+					style="height: 15px; display: table-cell;">
 					CLASS: <select ng-model="selectedClass">
 						<option ng-repeat="x in classes">{{x}}</option>
 					</select>
@@ -93,7 +93,7 @@ a:hover {
 			</div>
 			<div class="col-md-3">
 				<div class="panel-heading"
-					style="height: 55px; display: table-cell;">
+					style="height: 15px; display: table-cell;">
 					Sample: <select ng-model="selectedSample">
 						<option ng-repeat="x in samples">{{x}}</option>
 					</select>
