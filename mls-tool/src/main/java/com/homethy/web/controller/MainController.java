@@ -228,7 +228,7 @@ public class MainController {
     if (index == 0)
       url = "http://predatastore.chime.me/config/mls-info/retsmd";
     else if (index == 1)
-      url = "http://datastore.chime.me/config/mls-info/retsmd";
+      url = "https://datastore.chime.me/config/mls-info/retsmd";
     PrintWriter out = null;
     BufferedReader in = null;
     String result = "";

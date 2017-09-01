@@ -58,7 +58,10 @@
 							ng-click="loadSample()">下载样例数据</button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default" ng-click="toPre()">同步到预发布</button>
+						<button type="button" class="btn btn-warning" ng-click="toPre()">同步到预发布</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-warning" ng-click="toOnline()">同步到线上</button>
 					</div>
 				</div>
 			</div>
@@ -100,13 +103,34 @@
             var leftScope = angular.element(leftGridDiv).scope();
             var sel = leftScope.gridApi.selection.getSelectedRows();
             if (sel.length > 0) {
-              alert(sel[0].mlsOrgId);
               $
                   .ajax({
                     type : 'POST',
                     contentType : "application/json",
                     url : '/mls-tool/getRets?mlsId=' + sel[0].mlsOrgId
                         + '&index=0',
+                    dataType : 'text',
+                    success : function(data) {
+                      alert("success!");
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown) {
+                      alert("error!");
+                    }
+                  });
+            } else {
+              alert("no selected record");
+            }
+          };
+          $scope.toOnline = function() {
+            var leftScope = angular.element(leftGridDiv).scope();
+            var sel = leftScope.gridApi.selection.getSelectedRows();
+            if (sel.length > 0) {
+              $
+                  .ajax({
+                    type : 'POST',
+                    contentType : "application/json",
+                    url : '/mls-tool/getRets?mlsId=' + sel[0].mlsOrgId
+                        + '&index=1',
                     dataType : 'text',
                     success : function(data) {
                       alert("success!");
