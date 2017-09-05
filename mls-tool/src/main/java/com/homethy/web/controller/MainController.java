@@ -287,7 +287,7 @@ public class MainController {
   public @ResponseBody String saveResourceById(@RequestParam int mlsId) {
 	List<ResourceSchemeBean> resSchems = readSchemes(String.valueOf(mlsId));
 	List<String> urlList = new ArrayList<String>();
-	String url = "http://predatastore.chime.me/config/mls-info/resource";
+	String url = "https://datastore.chime.me/config/mls-info/resource";
 	for(ResourceSchemeBean resourceSchemeBean : resSchems) {
 		String classes = "";
 		ArrayList<String> list = resourceSchemeBean.getClassName();
@@ -298,9 +298,11 @@ public class MainController {
 	              url + "?mlsId=" + mlsId + "&resourceName=" + resourceSchemeBean.getResourceName() + "&className=" + classes;
 		urlList.add(urlNameString);
 	}
-    String result = "";
+   
     BufferedReader in = null;
+    resourceService.deleteMlsResource(mlsId);
     for(String urls : urlList){
+    	String result = "";
 	    try {
 	      System.out.println(urls);
 	      log.info("Get Url:" + urls);
@@ -342,7 +344,6 @@ public class MainController {
 	    }
 	    List<ResourceBean> list =
 	        JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
-	    resourceService.deleteMlsResource(mlsId);
 	    for (ResourceBean bean : list) {
 	      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
 	          bean.getClassName(), bean.getResourceKey());
@@ -359,7 +360,7 @@ public class MainController {
 	  	String result = "";
 	    BufferedReader in = null;
 	    try {
-	      String url = "http://predatastore.chime.me/config/mls-info/resource";
+	      String url = "https://datastore.chime.me/config/mls-info/resource";
 	      String urlNameString =
 	          url + "?mlsId=" + mlsId + "&sql=" + sql;
 	      // System.out.println(urlNameString);

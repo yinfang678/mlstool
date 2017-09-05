@@ -100,7 +100,7 @@
               $.ajax({
                 type : 'GET',
                 contentType : "application/json",
-                url : '/mls-tool/saveResourceById?mlsId=' + mlsId,
+                url : '/mls-tool/saveResourceById?mlsId=' + $scope.mlsID,
                 dataType : "text",
                 success : function(data) {
                   alert('创建成功！' + data);
