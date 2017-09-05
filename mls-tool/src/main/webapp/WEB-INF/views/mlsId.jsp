@@ -113,13 +113,24 @@ a:hover {
 				<div class="btn-group btn-group-vertical" role="group"
 					aria-label="...">
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default" ng-click="update()">编辑</button>
+						<button type="button" class="btn btn-info" ng-click="update()">编辑</button>
 					</div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-primary" ng-click="addElem()">设置</button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-info" ng-click="repeal()">清除</button>
+						<button type="button" class="btn btn-warning" ng-click="repeal()">清除</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-success"
+							ng-click="saveFile()">保存</button>
+					</div>
+					<div style="height:100px" class="btn-group" role="group">
+						
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-warning" 
+							ng-click="download()">采样</button>
 					</div>
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-default"
@@ -129,17 +140,8 @@ a:hover {
 						<button type="button" class="btn btn-default"
 							ng-click="copyData()">粘贴</button>
 					</div>
-
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"
-							ng-click="saveFile()">保存</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"
-							ng-click="download()">采样</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-warning" ng-click="reset()">重置</button>
+						<button type="button" class="btn btn-danger" ng-click="reset()">重置</button>
 					</div>
 				</div>
 			</div>

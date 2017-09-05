@@ -32,4 +32,11 @@ public class MappingUtil {
     return false;
   }
 
+  public static boolean isRequiredRes(String str) {
+    if (isAgent(str) || isOffice(str) || isProperty(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

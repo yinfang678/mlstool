@@ -20,7 +20,6 @@ import com.homethy.web.domain.RetsM;
 import com.homethy.web.service.IListingDataBeanSerivce;
 import com.homethy.web.service.IRetsMService;
 import com.homethy.web.utils.MappingUtil;
-import com.homethy.web.utils.PropertiesUtil;
 
 @Service
 public class RestMserviceImpl implements IRetsMService {
@@ -43,7 +42,7 @@ public class RestMserviceImpl implements IRetsMService {
     while (resourceNodeIter.hasNext()) {
       Map.Entry<String, JsonNode> resourceNode = resourceNodeIter.next();
       ObjectNode propertyNode = (ObjectNode) resourceNode.getValue();
-      if (PropertiesUtil.PropertyStrs().contains(resourceNode.getKey().toLowerCase())) {
+      if (MappingUtil.isProperty(resourceNode.getKey().toLowerCase())) {
         propertyNode.set("COMMONFIELD", getCommonFieldNode(mlsNode));
       }
       Iterator<Map.Entry<String, JsonNode>> classNodeIter = propertyNode.fields();
