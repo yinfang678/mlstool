@@ -58,6 +58,8 @@ public interface ResourceService {
 
 	int deleteResource(@Param("id") long id);
 
+	int deleteMlsResource(@Param("mlsid") int mlsid);
+	
 	int undeleteResource(@Param("id") long id);
 
 	int updateResourceSummary(ResourceBean resource);

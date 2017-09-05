@@ -111,6 +111,13 @@ public interface ResourceDAO {
 	int undeleteResource(@Param("id") long id);
 
 	/**
+	 * 删除
+	 */
+	@Update("delete from "+ TABLE_NAME
+			+ " where mls_id = #{mlsid}")
+	int deleteMlsResource(@Param("mlsid") int mlsid);
+	
+	/**
 	 * 查询一条数据
 	 * @param id
 	 * @return

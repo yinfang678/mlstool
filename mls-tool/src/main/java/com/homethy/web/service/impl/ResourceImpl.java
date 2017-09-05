@@ -78,6 +78,10 @@ public class ResourceImpl implements ResourceService {
 	public int deleteResource(@Param("id") long id) {
 		return resourceDAO.deleteResource(id);
 	}
+	
+	public int deleteMlsResource(@Param("mlsid") int mlsid) {
+		return resourceDAO.deleteMlsResource(mlsid);
+	}
 
 	public int undeleteResource(@Param("id") long id) {
 		return resourceDAO.undeleteResource(id);
