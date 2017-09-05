@@ -97,7 +97,18 @@
             alert("loadMeta");
           };
           $scope.loadSample = function() {
-            alert("loadSample");
+              $.ajax({
+                type : 'GET',
+                contentType : "application/json",
+                url : '/mls-tool/saveResourceById?mlsId=' + mlsId,
+                dataType : "text",
+                success : function(data) {
+                  alert('创建成功！' + data);
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                  alert('创建失败！' + errorThrown);
+                }
+              });
           };
           $scope.toPre = function() {
             var leftScope = angular.element(leftGridDiv).scope();

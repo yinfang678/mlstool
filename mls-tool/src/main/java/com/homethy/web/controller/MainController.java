@@ -165,12 +165,12 @@ public class MainController {
     }
     List<ResourceBean> list =
         JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
+    resourceService.deleteMlsResource(mlsId);
     for (ResourceBean bean : list) {
       String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
           bean.getClassName(), bean.getResourceKey());
       log.info("Get data from dynamodb, chimeKey =" + chimeKey);
       bean.setData(getDynamodbData(chimeKey));
-      resourceService.deleteMlsResource(mlsId);
       resourceService.insertResource(bean);
     }
     return "success";
@@ -342,12 +342,12 @@ public class MainController {
 	    }
 	    List<ResourceBean> list =
 	        JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
+	    resourceService.deleteMlsResource(mlsId);
 	    for (ResourceBean bean : list) {
 	      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
 	          bean.getClassName(), bean.getResourceKey());
 	      log.info("Get data from dynamodb, chimeKey =" + chimeKey);
 	      bean.setData(getDynamodbData(chimeKey));
-	      resourceService.deleteMlsResource(mlsId);
 	      resourceService.insertResource(bean);
 	    }
 	  }
@@ -401,12 +401,12 @@ public class MainController {
 	    }
 	    List<ResourceBean> list =
 	        JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
+	    resourceService.deleteMlsResource(mlsId);
 	    for (ResourceBean bean : list) {
 	      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
 	          bean.getClassName(), bean.getResourceKey());
 	      log.info("Get data from dynamodb, chimeKey =" + chimeKey);
 	      bean.setData(getDynamodbData(chimeKey));
-	      resourceService.deleteMlsResource(mlsId);
 	      resourceService.insertResource(bean);
 	    }
 	    return "success";
