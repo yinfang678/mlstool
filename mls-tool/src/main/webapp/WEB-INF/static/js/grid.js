@@ -16,7 +16,18 @@ function init(app) {
                 {
                   field : 'colname',
                   width : '160',
-                  displayName : '字段名'
+                  displayName : '字段名',
+                  filter : {
+                    condition : function(searchTerm, cellValue, row) {
+                      var colname = row.entity.colname.toLowerCase().indexOf(
+                          searchTerm.toLowerCase()) >= 0;
+                      var stdname = row.entity.stdname.toLowerCase().indexOf(
+                          searchTerm.toLowerCase()) >= 0;
+                      var name = row.entity.name.toLowerCase().indexOf(
+                          searchTerm.toLowerCase()) >= 0;
+                      return colname | stdname | name;
+                    }
+                  },
                 },
                 {
                   field : 'stdname',

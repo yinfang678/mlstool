@@ -2,11 +2,14 @@ package com.homethy.web.service.impl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,13 +35,25 @@ public class RestMserviceImpl implements IRetsMService {
 
   private ObjectMapper mapper = new ObjectMapper();
 
+  private Set<String> commKeys = new HashSet<>();
+
   @Override
   public String getRetsMByMlsId(int mlsId) throws IOException {
     RetsM retsM = retsMDAO.getRetsMByMlsId(mlsId);
     String mlsMeta = retsM.getMetaData();
-
-    JsonNode mlsNode = mapper.readTree(mlsMeta);
+    List<String> filterRes = new ArrayList<>();
+    ObjectNode mlsNode = (ObjectNode) mapper.readTree(mlsMeta);
     Iterator<Map.Entry<String, JsonNode>> resourceNodeIter = mlsNode.fields();
+    while (resourceNodeIter.hasNext()) {
+      Map.Entry<String, JsonNode> resourceNode = resourceNodeIter.next();
+      if (!MappingUtil.isRequiredRes(resourceNode.getKey())) {
+        filterRes.add(resourceNode.getKey());
+      }
+    }
+    for (String key : filterRes) {
+      mlsNode.remove(key);
+    }
+    resourceNodeIter = mlsNode.fields();
     while (resourceNodeIter.hasNext()) {
       Map.Entry<String, JsonNode> resourceNode = resourceNodeIter.next();
       ObjectNode propertyNode = (ObjectNode) resourceNode.getValue();
@@ -66,6 +81,11 @@ public class RestMserviceImpl implements IRetsMService {
           node.put("stdname", dataNode.getValue().get(1).textValue());
           node.put("type", dataNode.getValue().get(2).textValue());
           node.put("sample", "");
+          if (commKeys.contains(dataNode.getKey())) {
+            node.put("comm", "1");
+          } else {
+            node.put("comm", "0");
+          }
           ((ArrayNode) root.get("dataDisplay")).add(node);
         }
         classNode.setValue(root);
@@ -119,6 +139,8 @@ public class RestMserviceImpl implements IRetsMService {
     for (Entry<String, Integer> count : countMap.entrySet()) {
       if (count.getValue() < 2) {
         nodeMap.remove(count.getKey());
+      } else {
+        commKeys.add(count.getKey());
       }
     }
     ObjectNode rDataNode = mapper.createObjectNode();

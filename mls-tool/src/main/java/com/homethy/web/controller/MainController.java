@@ -10,7 +10,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,11 +57,8 @@ public class MainController {
   public static final String DYNAMODB_TABLE_LISTING = "listing";
   public static final String DYNAMODB_TABLE_LISTING_HASHKEY = "chimeKey";
 
-
-
   @Autowired
   IListingDataBeanSerivce listingDataBeanSerivce;
-
 
   @Autowired
   IRetsMService retsMService;
@@ -282,155 +278,153 @@ public class MainController {
     }
     return "success";
   }
-  
+
   @RequestMapping("/saveResourceById")
   public @ResponseBody String saveResourceById(@RequestParam int mlsId) {
-	List<ResourceSchemeBean> resSchems = readSchemes(String.valueOf(mlsId));
-	List<String> urlList = new ArrayList<String>();
-	String url = "https://datastore.chime.me/config/mls-info/resource";
-	for(ResourceSchemeBean resourceSchemeBean : resSchems) {
-		String classes = "";
-		ArrayList<String> list = resourceSchemeBean.getClassName();
-		for(String i : list){
-			classes += i+";";
-		}
-		String urlNameString =
-	              url + "?mlsId=" + mlsId + "&resourceName=" + resourceSchemeBean.getResourceName() + "&className=" + classes;
-		urlList.add(urlNameString);
-	}
-   
+    List<ResourceSchemeBean> resSchems = readSchemes(String.valueOf(mlsId));
+    List<String> urlList = new ArrayList<String>();
+    String url = "https://datastore.chime.me/config/mls-info/resource";
+    for (ResourceSchemeBean resourceSchemeBean : resSchems) {
+      String classes = "";
+      ArrayList<String> list = resourceSchemeBean.getClassName();
+      for (String i : list) {
+        classes += i + ";";
+      }
+      String urlNameString = url + "?mlsId=" + mlsId + "&resourceName="
+          + resourceSchemeBean.getResourceName() + "&className=" + classes;
+      urlList.add(urlNameString);
+    }
+
     BufferedReader in = null;
     resourceService.deleteMlsResource(mlsId);
-    for(String urls : urlList){
-    	String result = "";
-	    try {
-	      System.out.println(urls);
-	      log.info("Get Url:" + urls);
-	      URL realUrl = new URL(urls);
-	      // 打开和URL之间的连接
-	      URLConnection connection = realUrl.openConnection();
-	      // 设置通用的请求属性
-	      connection.setRequestProperty("accept", "*/*");
-	      connection.setRequestProperty("connection", "Keep-Alive");
-	      connection.setRequestProperty("user-agent",
-	          "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-	      // 建立实际的连接
-	      connection.connect();
-	      // 获取所有响应头字段
-	      Map<String, List<String>> map = connection.getHeaderFields();
-	      // 遍历所有的响应头字段
-	      for (String key : map.keySet()) {
-	        System.out.println(key + "--->" + map.get(key));
-	      }
-	      // 定义 BufferedReader输入流来读取URL的响应
-	      in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	      String line;
-	      while ((line = in.readLine()) != null) {
-	        result += line;
-	      }
-	      Thread.sleep(500);
-	    } catch (Exception e) {
-	      System.out.println("发送GET请求出现异常！" + e);
-	      log.error(e.getMessage(), e);
-	      e.printStackTrace();
-	    } finally {
-	      try {
-	        if (in != null) {
-	          in.close();
-	        }
-	      } catch (Exception e2) {
-	        e2.printStackTrace();
-	      }
-	    }
-	    List<ResourceBean> list =
-	        JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
-	    for (ResourceBean bean : list) {
-	      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
-	          bean.getClassName(), bean.getResourceKey());
-	      log.info("Get data from dynamodb, chimeKey =" + chimeKey);
-	      bean.setData(getDynamodbData(chimeKey));
-	      resourceService.insertResource(bean);
-	    }
-	  }
+    for (String urls : urlList) {
+      String result = "";
+      try {
+        System.out.println(urls);
+        log.info("Get Url:" + urls);
+        URL realUrl = new URL(urls);
+        // 打开和URL之间的连接
+        URLConnection connection = realUrl.openConnection();
+        // 设置通用的请求属性
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+            "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        // 建立实际的连接
+        connection.connect();
+        // 获取所有响应头字段
+        Map<String, List<String>> map = connection.getHeaderFields();
+        // 遍历所有的响应头字段
+        for (String key : map.keySet()) {
+          System.out.println(key + "--->" + map.get(key));
+        }
+        // 定义 BufferedReader输入流来读取URL的响应
+        in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String line;
+        while ((line = in.readLine()) != null) {
+          result += line;
+        }
+        Thread.sleep(500);
+      } catch (Exception e) {
+        System.out.println("发送GET请求出现异常！" + e);
+        log.error(e.getMessage(), e);
+        e.printStackTrace();
+      } finally {
+        try {
+          if (in != null) {
+            in.close();
+          }
+        } catch (Exception e2) {
+          e2.printStackTrace();
+        }
+      }
+      List<ResourceBean> list =
+          JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
+      for (ResourceBean bean : list) {
+        String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
+            bean.getClassName(), bean.getResourceKey());
+        log.info("Get data from dynamodb, chimeKey =" + chimeKey);
+        bean.setData(getDynamodbData(chimeKey));
+        resourceService.insertResource(bean);
+      }
+    }
     return "success";
   }
-  
+
   @RequestMapping("/saveResourceBySql")
-  public @ResponseBody String saveResourceBySql(@RequestParam int mlsId,@RequestParam int sql) {
-	  	String result = "";
-	    BufferedReader in = null;
-	    try {
-	      String url = "https://datastore.chime.me/config/mls-info/resource";
-	      String urlNameString =
-	          url + "?mlsId=" + mlsId + "&sql=" + sql;
-	      // System.out.println(urlNameString);
-	      log.info("Get Url:" + urlNameString);
-	      URL realUrl = new URL(urlNameString);
-	      // 打开和URL之间的连接
-	      URLConnection connection = realUrl.openConnection();
-	      // 设置通用的请求属性
-	      connection.setRequestProperty("accept", "*/*");
-	      connection.setRequestProperty("connection", "Keep-Alive");
-	      connection.setRequestProperty("user-agent",
-	          "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-	      // 建立实际的连接
-	      connection.connect();
-	      // 获取所有响应头字段
-	      Map<String, List<String>> map = connection.getHeaderFields();
-	      // 遍历所有的响应头字段
-	      for (String key : map.keySet()) {
-	        System.out.println(key + "--->" + map.get(key));
-	      }
-	      // 定义 BufferedReader输入流来读取URL的响应
-	      in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	      String line;
-	      while ((line = in.readLine()) != null) {
-	        result += line;
-	      }
-	    } catch (Exception e) {
-	      System.out.println("发送GET请求出现异常！" + e);
-	      log.error(e.getMessage(), e);
-	      e.printStackTrace();
-	    } finally {
-	      try {
-	        if (in != null) {
-	          in.close();
-	        }
-	      } catch (Exception e2) {
-	        e2.printStackTrace();
-	      }
-	    }
-	    List<ResourceBean> list =
-	        JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
-	    resourceService.deleteMlsResource(mlsId);
-	    for (ResourceBean bean : list) {
-	      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
-	          bean.getClassName(), bean.getResourceKey());
-	      log.info("Get data from dynamodb, chimeKey =" + chimeKey);
-	      bean.setData(getDynamodbData(chimeKey));
-	      resourceService.insertResource(bean);
-	    }
-	    return "success";
+  public @ResponseBody String saveResourceBySql(@RequestParam int mlsId, @RequestParam int sql) {
+    String result = "";
+    BufferedReader in = null;
+    try {
+      String url = "https://datastore.chime.me/config/mls-info/resource";
+      String urlNameString = url + "?mlsId=" + mlsId + "&sql=" + sql;
+      // System.out.println(urlNameString);
+      log.info("Get Url:" + urlNameString);
+      URL realUrl = new URL(urlNameString);
+      // 打开和URL之间的连接
+      URLConnection connection = realUrl.openConnection();
+      // 设置通用的请求属性
+      connection.setRequestProperty("accept", "*/*");
+      connection.setRequestProperty("connection", "Keep-Alive");
+      connection.setRequestProperty("user-agent",
+          "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+      // 建立实际的连接
+      connection.connect();
+      // 获取所有响应头字段
+      Map<String, List<String>> map = connection.getHeaderFields();
+      // 遍历所有的响应头字段
+      for (String key : map.keySet()) {
+        System.out.println(key + "--->" + map.get(key));
+      }
+      // 定义 BufferedReader输入流来读取URL的响应
+      in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String line;
+      while ((line = in.readLine()) != null) {
+        result += line;
+      }
+    } catch (Exception e) {
+      System.out.println("发送GET请求出现异常！" + e);
+      log.error(e.getMessage(), e);
+      e.printStackTrace();
+    } finally {
+      try {
+        if (in != null) {
+          in.close();
+        }
+      } catch (Exception e2) {
+        e2.printStackTrace();
+      }
+    }
+    List<ResourceBean> list =
+        JSONArray.toList(JSONArray.fromObject(result), new ResourceBean(), new JsonConfig());
+    resourceService.deleteMlsResource(mlsId);
+    for (ResourceBean bean : list) {
+      String chimeKey = String.format("%s.%s.%s.%s", bean.getMlsId(), bean.getResourceName(),
+          bean.getClassName(), bean.getResourceKey());
+      log.info("Get data from dynamodb, chimeKey =" + chimeKey);
+      bean.setData(getDynamodbData(chimeKey));
+      resourceService.insertResource(bean);
+    }
+    return "success";
   }
-  
+
   List<ResourceSchemeBean> readSchemes(String mlsId) {
-		AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
-		DynamoDB docClient = new DynamoDB(client);
+    AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+    DynamoDB docClient = new DynamoDB(client);
 
-		Table table = docClient.getTable("mls");
-		GetItemOutcome outcome = table.getItemOutcome(
-				"id", Integer.parseInt(mlsId));
-		String jsonStr = outcome.getItem().getJSON("scheme");
+    Table table = docClient.getTable("mls");
+    GetItemOutcome outcome = table.getItemOutcome("id", Integer.parseInt(mlsId));
+    String jsonStr = outcome.getItem().getJSON("scheme");
 
-		ObjectMapper objMap = new ObjectMapper();
+    ObjectMapper objMap = new ObjectMapper();
 
-		List<ResourceSchemeBean> schemes = null;
-		try {
-			schemes = objMap.readValue(jsonStr, new TypeReference<ArrayList<ResourceSchemeBean>>(){});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    List<ResourceSchemeBean> schemes = null;
+    try {
+      schemes = objMap.readValue(jsonStr, new TypeReference<ArrayList<ResourceSchemeBean>>() {});
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-		return schemes;
-	}
+    return schemes;
+  }
 }

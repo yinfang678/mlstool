@@ -149,7 +149,7 @@ a:hover {
 				<div class="panel panel-default">
 					<div class="panel-heading title">MLS字段</div>
 					<div class="panel-body" ui-grid="mlsGrid" style="height: 480px"
-						ui-grid-selection ui-grid-resize-columns></div>
+						ui-grid-selection ui-grid-resize-columns ui-grid-filter></div>
 				</div>
 			</div>
 		</div>

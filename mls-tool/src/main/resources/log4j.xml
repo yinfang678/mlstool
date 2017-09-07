@@ -10,21 +10,13 @@
 	</appender>
 
 	<appender name="homethysite" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="${catalina.base}/logs/site/homethy_site.log" />
+		<param name="File" value="${catalina.base}/logs/site/mlstool.log" />
 		<param name="DatePattern" value="'_'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS}|%5p|(%F:%L)|%m%n" />
 		</layout>
 	</appender>
-	
-	<appender name="homethysitelead" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="${catalina.base}/logs/site/homethy_site_lead.log" />
-		<param name="DatePattern" value="'_'yyyy-MM-dd" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS}|%5p|(%F:%L)|%m%n" />
-		</layout>
-	</appender>
-	
+
 	<appender name="accesslog" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/site/site_accesslog.log" />
 		<param name="DatePattern" value="'_'yyyy-MM-dd" />
@@ -32,15 +24,7 @@
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS}|%5p|(%F:%L)|%m%n" />
 		</layout>
 	</appender>
-	
-	<appender name="website.access.xlog" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="${catalina.base}/logs/site/xlog/site_access_xlog.log" />
-		<param name="DatePattern" value="'_'yyyy-MM-dd" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS}|%5p|(%F:%L)|%m%n" />
-		</layout>
-	</appender>
-	
+
 	<appender name="globalException" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/site/global_exception.log" />
 		<param name="DatePattern" value="'_'yyyy-MM-dd" />
@@ -48,8 +32,8 @@
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS}|%5p|(%F:%L)|%m%n" />
 		</layout>
 	</appender>
-	
-		<!--myibatis perf log -->
+
+	<!--myibatis perf log -->
 	<appender name="statFileAppender_myibatis" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/myibatis_perf/perfStats.log" />
 		<param name="DatePattern" value="'_'yyyy-MM-dd" />
@@ -66,7 +50,7 @@
 			<param name="ConversionPattern" value="%m%n" />
 		</layout>
 	</appender>
-		<!--myibatis perf log -->
+	<!--myibatis perf log -->
 	<appender name="CoalescingStatistics_Myibatis"
 		class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
 		<!-- TimeSlice配置多少时间间隔去做一次汇总写入文件中 默认值是 30000 ms -->
@@ -75,22 +59,13 @@
 	</appender>
 
 	<appender name="CoalescingStatistics_Service"
-			  class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
+		class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
 		<!-- TimeSlice配置多少时间间隔去做一次汇总写入文件中 默认值是 30000 ms -->
 		<param name="TimeSlice" value="10000" />
 		<appender-ref ref="statFileAppender_service" />
 	</appender>
 
-
-	<appender name="esClient" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="${catalina.base}/logs/site/esSearch.log" />
-		<param name="DatePattern" value="'_'yyyy-MM-dd" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS}|%5p|(%F:%L)|%m%n" />
-		</layout>
-	</appender>
-	
-		<!-- myibatis perf log -->
+	<!-- myibatis perf log -->
 	<logger name="myibatis.perf.logger" additivity="false">
 		<level value="info" />
 		<appender-ref ref="CoalescingStatistics_Myibatis" />
@@ -101,7 +76,7 @@
 		<level value="info" />
 		<appender-ref ref="stdout" />
 	</logger>
-	
+
 	<logger name="org.springframework" additivity="false">
 		<level value="debug" />
 		<appender-ref ref="stdout" />
@@ -111,75 +86,16 @@
 		<level value="info" />
 		<appender-ref ref="homethysite" />
 	</logger>
-	
+
 	<logger name="com.homethy.web.service" additivity="false">
 		<level value="info" />
 		<appender-ref ref="homethysite" />
 	</logger>
-	
-	<logger name="com.homethy.web.util" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-	
-	<logger name="com.homethy.lead.sites" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-	
-	<logger name="com.homethy.persistence" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-	
-	<logger name="com.homethy.business" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
 
-	<logger name="com.homethy.ticket" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-  
-	<logger name="com.homethy.web.interceptor.AccessLogInterceptor" additivity="false">
-		<level value="info" />
-		<appender-ref ref="accesslog" />
-	</logger>
-	
-	<logger name="website.access.xlog" additivity="false">
-		<level value="info" />
-		<appender-ref ref="website.access.xlog" />
-	</logger>
-	
-	<logger name="com.homethy.web.interceptor.LoginInterceptor" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-	
-	<logger name="com.homethy.web.interceptor.SiteDomainInterceptor" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-
-	<logger name="com.homethy.web.interceptor.SiteLaunchInterceptor" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-	
-	<logger name="com.homethy.web.interceptor.SiteInfoInterceptor" additivity="false">
-		<level value="info" />
-		<appender-ref ref="homethysite" />
-	</logger>
-	
-	<logger name="com.homethy.web.exception.GlobalHandlerExceptionResolver" additivity="false">
+	<logger name="com.homethy.web.exception.GlobalHandlerExceptionResolver"
+		additivity="false">
 		<level value="info" />
 		<appender-ref ref="globalException" />
-	</logger>
-	
-	<logger name="com.homethy.listing.search.client.impl.ESClient" additivity="false">
-		<level value="info" />
-		<appender-ref ref="esClient" />
 	</logger>
 
 	<!-- business perf log -->
@@ -187,7 +103,7 @@
 		<level value="info" />
 		<appender-ref ref="CoalescingStatistics_Service" />
 	</logger>
-	
+
 	<root>
 		<level value="info" />
 		<appender-ref ref="stdout" />
