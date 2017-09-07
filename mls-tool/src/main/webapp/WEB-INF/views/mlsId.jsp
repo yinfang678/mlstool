@@ -65,6 +65,8 @@ a:hover {
 	color: black;
 	text-decoration: none;
 }
+
+.comm-css-class { color : red }
 </style>
 </head>
 <body ng-app="myApp">
@@ -149,7 +151,7 @@ a:hover {
 				<div class="panel panel-default">
 					<div class="panel-heading title">MLS字段</div>
 					<div class="panel-body" ui-grid="mlsGrid" style="height: 480px"
-						ui-grid-selection ui-grid-resize-columns ui-grid-filter></div>
+						ui-grid-selection ui-grid-resize-columns ></div>
 				</div>
 			</div>
 		</div>

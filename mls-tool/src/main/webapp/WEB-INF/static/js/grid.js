@@ -49,6 +49,13 @@ function init(app) {
                   width : '150',
                   displayName : '样例数据'
                 } ];
+            $scope.rowFormatter = function(row) {
+              return row.entity.comm == '1';
+            };
+            var rt = '<div ng-class="{ \'comm-css-class\': grid.appScope.rowFormatter( row ) }">'
+                + '  <div ng-if="row.entity.merge">{{row.entity.title}}</div>'
+                + '  <div ng-if="!row.entity.merge" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>'
+                + '</div>';
             $scope.mlsGrid = {
               data : 'mlsdateSource',
               columnDefs : $scope.myDefs,
@@ -56,7 +63,8 @@ function init(app) {
               enableGridMenu : true,
               onRegisterApi : function(gridApi) {
                 $scope.gridApi = gridApi;
-              }
+              },
+              rowTemplate : rt
             }
           });
   app
